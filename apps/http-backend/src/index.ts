@@ -1,6 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from './config';
+import { middleware } from './middleware';
 
 
 
@@ -15,7 +16,10 @@ import { JWT_SECRET } from './config';
 const app = express();
 
 app.post('/signup', (req , res) => {
-
+//db call
+res.json({
+  message: 'User signed up successfully'
+})
 })
 
 
@@ -25,12 +29,19 @@ app.post('/signin', (req , res) => {
   const token = jwt.sign({
     userId
   }, JWT_SECRET)
+
+  res.json({
+    token
+  });
 })
 
 
 
-app.post('/room', (req , res) => {
-  
+app.post('/room', middleware ,(req , res) => {
+  //db call
+  res.json({
+    roomId: '12345',
+  })
 })
 
 app.listen(3000, () => {
