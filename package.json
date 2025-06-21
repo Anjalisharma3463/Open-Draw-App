@@ -1,5 +1,5 @@
 {
-  "name": "Open-Draw-App",
+  "name": "open-draw-app",
   "private": true,
   "scripts": {
     "build": "turbo run build",
