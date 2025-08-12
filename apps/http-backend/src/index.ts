@@ -2,8 +2,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '@repo/backend-common/config';
 import { middleware } from './middleware';
-import {CreateUserschema , SigninSchema , CreateRoomSchema} from "@repo/backend-common/types"
-
+import {CreateUserSchema , SignSchema , CreateRoomSchema} from "@repo/common/types"
 
 // if this request . userid is only for this file
 
@@ -18,7 +17,7 @@ const app = express();
 app.use(express.json());
 
 app.post('/signup', (req, res) => {
-const data = CreateUserschema.safeParse(req.body);
+const data = CreateUserSchema.safeParse(req.body);
 if (!data.success) {
    res.status(400).json({
     error: 'Invalid input',
@@ -38,7 +37,7 @@ return;
 
 
 app.post('/signin', (req , res) => {
-  const data = SigninSchema.safeParse(req.body);
+  const data = SignSchema.safeParse(req.body);
 if (!data.success) {
    res.status(400).json({
     error: 'Invalid input',
@@ -48,6 +47,7 @@ if (!data.success) {
 }
 
   const token = jwt.sign({
+    //@ts-ignore
     userId: data.userId
   }, JWT_SECRET)
 
