@@ -2,10 +2,7 @@ import { WebSocketServer } from "ws";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from '@repo/backend-common/config';
 
-interface JwtPayload {
-  userId: string;
-}
-
+ 
 const wss = new WebSocketServer({ port: 8080 });
 
 wss.on("connection", (ws , request) => {
@@ -27,7 +24,13 @@ wss.on("connection", (ws , request) => {
         return;
     }
    
-    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+      if (typeof decoded == "string"){
+      ws.close(1008, "Invalid or malformed token.");
+      return;
+    }
+
     if (!decoded) {
         ws.close(1008, "Invalid token");
         return;

@@ -2,9 +2,6 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "@repo/backend-common/config";
 
-interface JwtPayload {
-  userId: string;
-}
 
 export function AuthMiddleware(req: Request, res: Response, next: NextFunction) {
   try {
@@ -17,7 +14,12 @@ export function AuthMiddleware(req: Request, res: Response, next: NextFunction) 
        return;
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    if (typeof decoded == "string"){
+      res.status(401).json({ error: "Invalid or malformed token." });
+      return;
+    }
 
     if (decoded && decoded.userId) {
       req.userId = decoded.userId;
