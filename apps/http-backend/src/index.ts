@@ -52,19 +52,32 @@ try {
 })
 
 
-app.post('/signin', (req , res) => {
-  const data = SignSchema.safeParse(req.body);
-if (!data.success) {
+app.post('/signin',async(req , res) => {
+  const parsedData = SignSchema.safeParse(req.body);
+if (!parsedData.success) {
    res.status(400).json({
     error: 'Invalid input',
-    details: data.error.errors
+    details: parsedData.error.errors
   });
   return;
 }
 //db call for user authentication n getting user id
+  const user = await prismaClient.user.findFirst({
+    where: {
+      email: parsedData.data.username,
+      password: parsedData.data.password
+    }
+  })
+
+  if(!user){
+    res.status(403).json({
+      message :"Not Authorized"
+    });
+    return;
+  }
   const token = jwt.sign({
-    userId: 1
-  }, JWT_SECRET)
+      userId: user.id
+    }, JWT_SECRET)
 
   res.json({
     token
@@ -73,19 +86,39 @@ if (!data.success) {
 
 
 
-app.post('/room', AuthMiddleware, (req, res) => {
-  const data = CreateRoomSchema.safeParse(req.body);
-if (!data.success) {
+app.post('/room', AuthMiddleware,async (req, res) => {
+  const parsedData = CreateRoomSchema.safeParse(req.body);
+if (!parsedData.success) {
    res.status(400).json({
     error: 'Invalid input',
-    details: data.error.errors
+    details: parsedData.error.errors
   });
   return;
 }
-  //db call
-  res.json({
-    roomId: '12345',
+
+const userId = req.userId;
+if (!userId) {
+  res.status(401).json({ error: "Unauthorized: userId missing" });
+  return;
+}
+
+try {
+  const room = await prismaClient.room.create({
+    data:{
+      slug: parsedData.data.roomName,
+      adminId: userId
+    }
   })
+   
+  res.json({
+    roomId: room.id,
+  })
+  
+} catch (error) {
+  res.status(411).json({
+    message:"Room already exists with this name. Choose a different name."
+  })
+}
 })
 
 app.listen(3001, () => {
