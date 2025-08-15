@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '@repo/backend-common/config';
-import { AuthMiddleware } from './middleware';
+import { AuthMiddleware } from './middleware.js';
 import {CreateUserSchema , SignSchema , CreateRoomSchema} from "@repo/common/types"
 // import prisma from "@repo/db/client"
 import {prismaClient} from "@repo/db/client"
@@ -28,23 +28,23 @@ if (!parsedData.success) {
   return;
 } 
 
-const { username, password, name  } = parsedData.data;
 try {
-
-  await prismaClient.user.create({
+  
+  const { username, password, name  } = parsedData.data; 
+ const user = await prismaClient.user.create({
     data : {
       email: username,
       password,
       name}
-    })
-    
-    //db call
+    }) 
+
     res.json({
       message: 'User signed up successfully',
-      userId: "123"
+      userId: user.id
     })
   }  
-  catch (error) {
+  catch (error) { 
+    
    res.status(411).json({
     message : "User already exists"
    })
@@ -88,7 +88,7 @@ if (!data.success) {
   })
 })
 
-app.listen(3000, () => {
-  console.log('HTTP backend is running on port 3000');
+app.listen(3001, () => {
+  console.log('HTTP backend is running on port 3001');
 }
 );
