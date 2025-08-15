@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '@repo/backend-common/config';
 import { AuthMiddleware } from './middleware';
 import {CreateUserSchema , SignSchema , CreateRoomSchema} from "@repo/common/types"
+// import prisma from "@repo/db/client"
+import {prismaClient} from "@repo/db/client"
 
 // if this request.userid is only for this file
 
@@ -16,23 +18,37 @@ const app = express();
 
 app.use(express.json());
 
-app.post('/signup', (req, res) => {
-const data = CreateUserSchema.safeParse(req.body);
-if (!data.success) {
+app.post('/signup', async (req, res) => {
+const parsedData = CreateUserSchema.safeParse(req.body);
+if (!parsedData.success) {
    res.status(400).json({
     error: 'Invalid input',
-    details: data.error.errors
+    details: parsedData.error.errors
   });
   return;
-}
-const { username, password, name  } = data.data;
+} 
 
+const { username, password, name  } = parsedData.data;
+try {
 
-//db call
-res.json({
-  message: 'User signed up successfully'
-})
-return;
+  await prismaClient.user.create({
+    data : {
+      email: username,
+      password,
+      name}
+    })
+    
+    //db call
+    res.json({
+      message: 'User signed up successfully',
+      userId: "123"
+    })
+  }  
+  catch (error) {
+   res.status(411).json({
+    message : "User already exists"
+   })
+  }
 })
 
 
