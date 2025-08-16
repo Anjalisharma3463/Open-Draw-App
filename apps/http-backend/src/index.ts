@@ -121,6 +121,41 @@ try {
 }
 })
 
+
+app.get("/chats/:roomId", AuthMiddleware, async (req, res) => {
+  const roomId = Number(req.params.roomId);
+  const userId = req.userId;
+  console.log("req.params.roomId:", req.params.roomId);
+  console.log("roomId:", roomId);
+
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized: userId missing" });
+    return;
+  }
+
+  try {
+    const messages = await prismaClient.chat.findMany({
+      where: {
+        roomId: roomId,
+      },
+      take: 50,
+      orderBy: {
+        id: 'desc'
+      }
+    });
+    console.log("messages array: . ,",messages);
+    
+    res.json({
+      messages
+      
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Failed to retrieve messages",
+    });
+  }
+});
+
 app.listen(3001, () => {
   console.log('HTTP backend is running on port 3001');
 }
