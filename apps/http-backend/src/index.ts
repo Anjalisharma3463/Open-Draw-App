@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '@repo/backend-common/config';
 import { AuthMiddleware } from './middleware.js';
@@ -17,6 +18,15 @@ import {prismaClient} from "@repo/db/client"
 const app = express();
 
 app.use(express.json());
+app.use(cors({
+  origin: "http://localhost:3000"
+}));
+
+app.use((req, res, next) => {
+  console.log("Incoming request:", req.method, req.url);
+  next();
+});
+
 
 app.post('/signup', async (req, res) => {
 const parsedData = CreateUserSchema.safeParse(req.body);
@@ -30,7 +40,7 @@ if (!parsedData.success) {
 
 try {
   
-  const { username, password, name  } = parsedData.data; 
+ const { username, password, name  } = parsedData.data; 
  const user = await prismaClient.user.create({
     data : {
       email: username,
@@ -123,6 +133,8 @@ try {
 
 
 app.get("/chats/:roomId", AuthMiddleware, async (req, res) => {
+  console.log("Fetching chats for roomId:", req.params.roomId);
+
   const roomId = Number(req.params.roomId);
   const userId = req.userId;
   console.log("req.params.roomId:", req.params.roomId);
@@ -156,7 +168,36 @@ app.get("/chats/:roomId", AuthMiddleware, async (req, res) => {
   }
 });
 
-app.listen(3001, () => {
-  console.log('HTTP backend is running on port 3001');
-}
-);
+
+app.get("/room/:slug",AuthMiddleware, async (req, res) => {
+  const roomSlug = req.params.slug;
+  console.log("Fetched room slug:", roomSlug);
+
+  try {
+    const room = await prismaClient.room.findFirst({
+      where: {
+        slug: roomSlug,
+      },
+    });
+    console.log("Room in room/slug in http backend: ",room);
+    
+    if (!room) {
+      res.status(404).json({ error: "Room not found" });
+      return;
+    }
+
+    res.json({ room });
+  } catch (error) {
+    console.log("error in room/slug/: ", error);
+
+    res.status(500).json({ error: "Failed to retrieve room" });
+  }
+        });
+
+
+
+        
+    app.listen(3001, () => {
+          console.log('HTTP backend is running on port 3001');
+        }
+        );

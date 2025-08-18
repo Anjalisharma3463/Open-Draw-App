@@ -5,6 +5,7 @@ import { JWT_SECRET } from "@repo/backend-common/config";
 
 export function AuthMiddleware(req: Request, res: Response, next: NextFunction) {
   try {
+    console.log("Auth Middleware triggered");
     // Usually the token is in the format: "Bearer <token>"
     const authHeader = req.headers["authorization"] ?? "";
     const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : authHeader.trim();
