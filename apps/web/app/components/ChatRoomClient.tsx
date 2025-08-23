@@ -49,3 +49,4 @@ export function ChatRoomClient({
         }}>Send message</button>
     </div>
 }
+

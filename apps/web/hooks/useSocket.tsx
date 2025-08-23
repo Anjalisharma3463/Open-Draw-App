@@ -20,3 +20,9 @@ export function useSocket() {
     }
 
 }
+
+
+// ws.onclose = () => {
+//   console.log("Socket closed. Reconnecting in 2s...");
+//   setTimeout(() => connectAgain(), 2000);
+// };

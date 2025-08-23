@@ -1,3 +1,27 @@
+
+
+
+
+
+
+// So the flow looks like this:
+
+// Frontend user Mohit opens app → React creates new WebSocket(...).
+
+// Frontend Mohit joins room → sends {type:"join_room", roomId:"123"} as a JSON string.
+
+// Backend parses it, stores that Mohit is now in room 123.
+
+// Frontend Anjali sends chat → sends {type:"chat", roomId:"123", message:"hi"} as a JSON string.
+
+// Backend checks all users in room 123 → forwards the chat to Mohit’s WebSocket connection by doing:
+
+// user.ws.send(JSON.stringify({type:"chat", message:"hi", roomId:"123"}));
+
+
+// Frontend Mohit receives event.data → runs JSON.parse(event.data) → shows the message on screen.
+
+
 import ws, { WebSocketServer } from "ws";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from '@repo/backend-common/config';
@@ -131,7 +155,7 @@ wss.on("connection", (ws , request) => {
 
   // check that the message that is sent to the room is exists or not in rooms array of each user.
   users.forEach(user => {
-    if(user.rooms.includes(roomId) ){
+    if(user.rooms.includes(roomId) && user.ws !== ws){
       user.ws.send(JSON.stringify({
         type: "chat",
         message: message,
