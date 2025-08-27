@@ -124,6 +124,10 @@ wss.on("connection", (ws , request) => {
   if(parsedData.type === "join_room"){
     const user = users.find( x => x.ws === ws);
     user?.rooms.push(parsedData.roomId);
+    console.log(
+      `User ${user?.userId} joined room ${parsedData.roomId}`
+    );
+    
   }  
 
   if(parsedData.type === "leave_room"){
@@ -143,19 +147,25 @@ wss.on("connection", (ws , request) => {
 // }
   if (parsedData.type === "chat"){
   const roomId = parsedData.roomId;
-  const message = parsedData.message;  
+  const message = parsedData.message; 
+   
 // will push this to  queue here later on
-  await prismaClient.chat.create({
+try {
+   await prismaClient.chat.create({
     data: {
       roomId,
       message,
       userId: userId
     }
   });
+} catch (err) {
+  console.error("DB write failed", err);
+}
+
 
   // check that the message that is sent to the room is exists or not in rooms array of each user.
   users.forEach(user => {
-    if(user.rooms.includes(roomId) && user.ws !== ws){
+    if(user.rooms.includes(roomId) ){
       user.ws.send(JSON.stringify({
         type: "chat",
         message: message,

@@ -11,7 +11,7 @@ export function Canvas({
     socket
 }: {
     socket: WebSocket;
-    roomId: string;
+    roomId: Number;
 }) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [game, setGame] = useState<Game>();
@@ -19,6 +19,7 @@ export function Canvas({
 
     useEffect(() => {
         game?.setTool(selectedTool);
+        console.log("Setting tool:", selectedTool)
     }, [selectedTool, game]);
 
     useEffect(() => {
@@ -26,6 +27,7 @@ export function Canvas({
         if (canvasRef.current) {
             const g = new Game(canvasRef.current, roomId, socket);
             setGame(g);
+       console.log("type of room id in  canvas in usereffect of canvasref : ", typeof(roomId));
 
             return () => {
                 g.destroy();

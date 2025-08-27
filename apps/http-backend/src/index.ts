@@ -18,9 +18,11 @@ import {prismaClient} from "@repo/db/client"
 const app = express();
 
 app.use(express.json());
-app.use(cors({
-  origin: "http://localhost:3000"
-}));
+
+
+
+
+app.use(cors({ origin: 'http://localhost:3001' })); 
 
 app.use((req, res, next) => {
   console.log("Incoming request:", req.method, req.url);
@@ -197,7 +199,7 @@ app.get("/room/:slug",AuthMiddleware, async (req, res) => {
 
 
         
-    app.listen(3001, () => {
-          console.log('HTTP backend is running on port 3001');
+    app.listen(3002, () => {
+          console.log('HTTP backend is running on port 3002');
         }
         );

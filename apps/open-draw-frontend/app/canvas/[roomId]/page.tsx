@@ -6,7 +6,8 @@ export default async function CanvasPage({ params }: {
     }
 }) {
     const roomId = (await params).roomId;
-
-    return <RoomCanvas roomId={roomId} />
+    console.log("type of room id in page.tsx/[]: ", typeof(roomId));
+    const room = Number(roomId);
+    return <RoomCanvas roomId={room} />
    
 }
