@@ -3,12 +3,13 @@ import axios from "axios";
 
 export async function getExistingShapes(roomId: Number) {
      const room = roomId.toString();
+     const token = localStorage.getItem("token");
      console.log("room string in http.ts: ",room);
      
     const res = await axios.get(`http://localhost:3002/chats/${room}`,
         {
             headers: {
-                Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0OGYzOWJiYy02MjMxLTQ0NWYtOWU1Ni1jMDY4OGM0MDgyZWQiLCJpYXQiOjE3NTYyOTYwNzR9.t4cJzjVjtnNyc0ezHNo8FsGjANRP8qlXBn8vYOIawm4`
+                Authorization: `Bearer ${token}`
             }
         }
     );
