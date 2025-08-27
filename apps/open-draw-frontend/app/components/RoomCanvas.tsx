@@ -29,7 +29,7 @@ export function RoomCanvas({ roomId }: { roomId: number }) {
       ws.send(data);
     };
 
-    return () => ws.close(); // cleanup
+    return () => ws.close();  
   }, [token, roomId]);
 
   if (!socket) {
