@@ -9,13 +9,13 @@ export default function LandingPage() {
       </p>
       <div className="flex gap-4">
         <a
-          href="/signup"
+          href="/auth/signup"
           className="px-6 py-3 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 transition"
         >
           Sign Up
         </a>
         <a
-          href="/signin"
+          href="/auth/signin"
           className="px-6 py-3 bg-gray-200 text-gray-800 rounded-xl shadow hover:bg-gray-300 transition"
         >
           Sign In

@@ -30,8 +30,15 @@ app.use((req, res, next) => {
 });
 
 
-app.post('/signup', async (req, res) => {
+app.post('/auth/signup', async (req, res) => {
 const parsedData = CreateUserSchema.safeParse(req.body);
+// {
+//   username: ZodString;
+//     password: ZodString;
+//     name: ZodString;
+// }
+console.log("Parsed data for signup from frontend :", parsedData);
+
 if (!parsedData.success) {
    res.status(400).json({
     error: 'Invalid input',
@@ -64,8 +71,12 @@ try {
 })
 
 
-app.post('/signin',async(req , res) => {
+app.post('/auth/signin',async(req , res) => {
   const parsedData = SignSchema.safeParse(req.body);
+  // {
+  //    username: ZodString;
+  //   password: ZodString;
+  // }
 if (!parsedData.success) {
    res.status(400).json({
     error: 'Invalid input',
@@ -87,10 +98,7 @@ if (!parsedData.success) {
     });
     return;
   }
-  const token = jwt.sign({
-      userId: user.id
-    }, JWT_SECRET)
-
+  const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
   res.json({
     token
   });
@@ -98,7 +106,7 @@ if (!parsedData.success) {
 
 
 
-app.post('/room', AuthMiddleware,async (req, res) => {
+app.post('/create-room', AuthMiddleware,async (req, res) => {
   const parsedData = CreateRoomSchema.safeParse(req.body);
 if (!parsedData.success) {
    res.status(400).json({
@@ -124,6 +132,7 @@ try {
    
   res.json({
     roomId: room.id,
+    message: "Room created successfully"
   })
   
 } catch (error) {
@@ -174,7 +183,8 @@ app.get("/chats/:roomId", AuthMiddleware, async (req, res) => {
 app.get("/room/:slug",AuthMiddleware, async (req, res) => {
   const roomSlug = req.params.slug;
   console.log("Fetched room slug:", roomSlug);
-
+ console.log("type of room slug in room/slug room details :", typeof(roomSlug));
+ 
   try {
     const room = await prismaClient.room.findFirst({
       where: {
