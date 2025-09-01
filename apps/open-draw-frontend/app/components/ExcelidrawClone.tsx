@@ -721,7 +721,7 @@ const setElementsWithHistory = (updater: (prev: AnyElement[]) => AnyElement[]) =
       </div>
 
       {/* Left properties panel */}
-      <div className="absolute left-4 top-20 z-20 space-y-4">
+      <div className="absolute left-4 top-5 z-20 space-y-4">
         {/* Stroke */}
         <div className="bg-[#2a2a2e] rounded-xl p-3 border border-[#3a3a3f]">
           <div className="text-xs mb-2">Stroke</div>
@@ -872,7 +872,7 @@ const setElementsWithHistory = (updater: (prev: AnyElement[]) => AnyElement[]) =
       </div>
 
       {/* Bottom status/zoom */}
-      <div className="absolute bottom-4 left-4 z-20">
+      <div className="absolute bottom-4 right-4 z-20">
         <div className="bg-[#2a2a2e] rounded-xl px-2 py-1.5 border border-[#3a3a3f] flex items-center gap-2 text-sm">
           <button onClick={() => changeZoom(-10)} className="px-2 py-1 rounded-lg hover:bg-[#35353a]">
             −
