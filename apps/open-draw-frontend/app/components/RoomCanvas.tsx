@@ -2,6 +2,7 @@
 import { WS_URL } from "@/config";
 import { useEffect, useState } from "react";
 import { Canvas } from "./Canvas";
+import ExcalidrawClone from "./ExcelidrawClone";
 
 export function RoomCanvas({ roomId }: { roomId: number }) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
@@ -38,7 +39,8 @@ export function RoomCanvas({ roomId }: { roomId: number }) {
 
   return (
     <div>
-      <Canvas roomId={roomId} socket={socket} />
+      {/* <Canvas roomId={roomId} socket={socket} /> */}
+      <ExcalidrawClone roomId={roomId} socket={socket}/>
     </div>
   );
 }

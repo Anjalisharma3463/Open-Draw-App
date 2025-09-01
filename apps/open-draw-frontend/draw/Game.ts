@@ -1,3 +1,4 @@
+ 
 
 import { Tool } from "@/app/components/Canvas";
 import { getExistingShapes } from "./http";
@@ -20,6 +21,21 @@ type Shape = {
     endX: number;
     endY: number;
 }
+
+
+
+  const colors = ['#000000', '#e03131', '#2f9e44', '#1971c2', '#f08c00', 'transparent'];
+
+//   const tools = [
+//     { id: 'select', icon: Mouse, label: 'Select' },
+//     { id: 'rectangle', icon: Square, label: 'Rectangle' },
+//     { id: 'circle', icon: Circle, label: 'Circle' },
+//     { id: 'arrow', icon: ArrowRight, label: 'Arrow' },
+//     { id: 'line', icon: Minus, label: 'Line' },
+//     { id: 'pencil', icon: Edit3, label: 'Draw' },
+//     { id: 'text', icon: Type, label: 'Text' },
+//     { id: 'hand', icon: Hand, label: 'Hand' }
+//   ];
 
 export class Game {
 

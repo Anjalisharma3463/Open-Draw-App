@@ -127,9 +127,7 @@ wss.on("connection", (ws , request) => {
     console.log(
       `User ${user?.userId} joined room ${parsedData.roomId}`
     );
-    
-  }  
-
+  }
   if(parsedData.type === "leave_room"){
     const user =  users.find(x => x.ws === ws);
     
