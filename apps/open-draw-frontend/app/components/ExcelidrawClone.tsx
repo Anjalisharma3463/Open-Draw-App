@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { getExistingShapes } from "@/draw/http"
+import { getExistingShapes } from "@/utils/http"
 import { useState, useRef, useEffect, useCallback } from "react"
 import {
   Mouse,
